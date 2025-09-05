@@ -6,7 +6,7 @@ API_key = "c46d7627"
 API_URL = "http://www.omdbapi.com"
 
 # Define the database URL
-DB_URL = "sqlite:///movies.db"
+DB_URL = "sqlite:///data/movies.db"
 
 # Create the engine
 engine = create_engine(DB_URL, echo=False)
@@ -73,6 +73,7 @@ def update_movie(title, rating):
         except Exception as e:
             print(f"Error: {e}")
 
+
 def get_data_from_api(search_term):
     """Get data from API."""
     response = requests.get(url=API_URL, params={"apikey": API_key, "t": search_term})
@@ -86,6 +87,7 @@ def prepare_data_for_db(movie_title):
     """Prepare data for DB."""
     #search_term = input("Enter search term: ")
     response = get_data_from_api(movie_title)
+    print(response)
     if response["Response"]:
         data_to_return = {}
         data_to_return["title"] = response["Title"]
