@@ -39,10 +39,14 @@ def add_movie(movie_title):
     """Add a new movie to the database."""
 
     movie_data = prepare_data_for_db(movie_title)
-    title = movie_data["title"]
-    year = movie_data["year"]
-    rating = movie_data["rating"]
-    poster_url = movie_data["poster_url"]
+    if "title" in movie_data:
+        title = movie_data["title"]
+        year = movie_data["year"]
+        rating = movie_data["rating"]
+        poster_url = movie_data["poster_url"]
+    else:
+        raise ValueError("Couldn't retrieve movie data from API!")
+        return
 
 
 
@@ -53,8 +57,10 @@ def add_movie(movie_title):
                                {"title": title, "year": year, "rating": rating, "poster_url": poster_url})
             connection.commit()
             print(f"Movie '{movie_title}' added successfully.")
+            print()
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"Couldn't add movie! Error: {e}")
+            print()
 
 def delete_movie(title):
     """Delete a movie from the database."""
@@ -63,8 +69,10 @@ def delete_movie(title):
             connection.execute(text("DELETE FROM movies WHERE title = :title"), parameters={'title': title})
             connection.commit()
             print(f"Movie '{title}' deleted successfully.")
+            print()
         except Exception as e:
-            print(f"Error: {e}")
+            print(f" couldn't delete movie! Error: {e}")
+            print()
 
 def update_movie(title, rating):
     """Update a movie's rating in the database."""
@@ -73,33 +81,34 @@ def update_movie(title, rating):
             connection.execute(text("UPDATE movies SET rating = :rating WHERE title = :title"), {"title": title, "rating": rating})
             connection.commit()
             print(f"Movie '{title}' updated successfully.")
+            print()
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"Couldn't update database! Error: {e}")
+            print()
 
 
 def get_data_from_api(search_term):
     """Get data from API."""
-    response = requests.get(url=API_URL, params={"apikey": API_key, "t": search_term})
-    if response.ok:
+    try:
+        response = requests.get(url=API_URL, params={"apikey": API_key, "t": search_term})
         return response.json()
-    else:
-        return {}
+    except Exception as e:
+        print(f"Couldn't access API! Error: {e}")
+        print()
 
 
 def prepare_data_for_db(movie_title):
     """Prepare data for DB."""
     #search_term = input("Enter search term: ")
     response = get_data_from_api(movie_title)
-    print(response)
-    if response["Response"]:
-        data_to_return = {}
-        data_to_return["title"] = response["Title"]
-        data_to_return["year"] = int(response["Year"])
-        data_to_return["poster_url"] = response["Poster"]
+    if "Title" in response:
+        data_to_return = {"title": response["Title"],
+                          "year": int(response["Year"]),
+                          "poster_url": response["Poster"]}
         ratings = response["Ratings"]
         for rating in ratings:
             if rating["Source"] == "Internet Movie Database":
                 data_to_return["rating"] = float(rating["Value"].split("/")[0])
         return data_to_return
     else:
-        return {}
+        return response

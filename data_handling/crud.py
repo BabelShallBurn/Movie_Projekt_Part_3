@@ -8,7 +8,7 @@ def list_movies():
     prints size of database and lists every movie and its corresponding rating
     """
     movies = ms.get_movies()
-    if movies is not None:
+    if movies != []:
         print(f"{len(movies)} in total")
         print()
         for movie in movies:
@@ -16,7 +16,7 @@ def list_movies():
         print()
         return
     else:
-        print("Couldn't find movies.json file. Please check directory for file.")
+        print("No movie data available")
         return
 
 
@@ -26,15 +26,20 @@ def add_movie():
     """
     while True:
         movie_to_add = input("Name a movie to add: ")
+        movies = ms.get_movies()
+        movie_exists = False
         try:
             if movie_to_add == "":
                 raise ValueError("Movie must not be empty!")
-
-
+            for movie in movies:
+                if movie["title"] == movie_to_add:
+                    movie_exists = True
+            if movie_exists:
+                raise ValueError("Movie already exists!")
             ms.add_movie(movie_to_add)
             return
         except ValueError as e:
-            print("Error:", e)
+            print("Couldn't add movie to database! Error:", e)
             print()
 
 
@@ -42,13 +47,22 @@ def delete_movie():
     """ Allows user to delete movie and its rating. """
     while True:
         movie_to_delete = input("Name a movie to delete: ")
+        movies = ms.get_movies()
+        movie_exists = False
         try:
             if movie_to_delete == "":
                 raise ValueError("Movie must not be empty!")
+            for movie in movies:
+                if movie["title"] == movie_to_delete:
+                    movie_exists = True
+            if not movie_exists:
+                raise ValueError("Movie not found!")
+
             ms.delete_movie(movie_to_delete)
             return
         except ValueError as e:
-            print("Error:", e)
+            print("Couldn't delete movie! Error:", e)
+            print()
 
 
 def update_movie():
@@ -66,7 +80,8 @@ def update_movie():
             ms.update_movie(movie_to_update, rating_to_update_float)
             return
         except ValueError as e:
-            print("Error:", e)
+            print("Couldn't update database! Error:", e)
+            print()
 
 
 def is_not_float(num):
@@ -122,7 +137,7 @@ def search_movie():
                 print("Error:", e)
                 return
     else:
-        print("Couldn't find movies.json file. Please check directory for file.")
+        print("Couldn't find any movies!")
         return
 
 
@@ -139,5 +154,5 @@ def random_movie():
         print(f"Random movie: {rand_movie["title"]} from {rand_movie["year"]} with a rating of {rand_movie["rating"]}")
         return
     else:
-        print("Couldn't find movies.json file. Please check directory for file.")
+        print("Couldn't find any movies.")
         return
