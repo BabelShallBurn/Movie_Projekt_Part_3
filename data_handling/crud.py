@@ -84,7 +84,7 @@ def update_movie():
             print()
 
 
-def is_not_float(num):
+def is_not_float(num:str):
     """helping function to check if a string is not a float
 
     Args:

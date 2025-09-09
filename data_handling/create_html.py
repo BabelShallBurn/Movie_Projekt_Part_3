@@ -24,7 +24,7 @@ def create_website():
     print("Created index.html file")
     return
 
-def load_html(file_path):
+def load_html(file_path:str):
     """ Loads a HTML file from given path. """
     with open(file_path, "r", encoding="utf-8") as fileobj:
         html_content = fileobj.read()

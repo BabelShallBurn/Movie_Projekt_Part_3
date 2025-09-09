@@ -28,14 +28,14 @@ with engine.connect() as connection:
     connection.commit()
 
 def get_movies():
-    """Retrieve all movies from the database."""
+    """Retrieve all movies as a list from the database."""
     with engine.connect() as connection:
         result = connection.execute(text("SELECT title, year, rating, poster_url FROM movies"))
         movies = result.fetchall()
 
     return [{"title": row[0], "year": row[1], "rating": row[2], "poster_url": row[3]} for row in movies]
 
-def add_movie(movie_title):
+def add_movie(movie_title:str):
     """Add a new movie to the database."""
 
     movie_data = prepare_data_for_db(movie_title)
@@ -49,8 +49,6 @@ def add_movie(movie_title):
         return
 
 
-
-
     with engine.connect() as connection:
         try:
             connection.execute(text("INSERT INTO movies (title, year, rating, poster_url) VALUES (:title, :year, :rating, :poster_url)"),
@@ -62,7 +60,8 @@ def add_movie(movie_title):
             print(f"Couldn't add movie! Error: {e}")
             print()
 
-def delete_movie(title):
+
+def delete_movie(title:str):
     """Delete a movie from the database."""
     with engine.connect() as connection:
         try:
@@ -74,7 +73,8 @@ def delete_movie(title):
             print(f" couldn't delete movie! Error: {e}")
             print()
 
-def update_movie(title, rating):
+
+def update_movie(title:str, rating:float):
     """Update a movie's rating in the database."""
     with engine.connect() as connection:
         try:
@@ -87,7 +87,7 @@ def update_movie(title, rating):
             print()
 
 
-def get_data_from_api(search_term):
+def get_data_from_api(search_term:str):
     """Get data from API."""
     try:
         response = requests.get(url=API_URL, params={"apikey": API_key, "t": search_term})
@@ -97,7 +97,7 @@ def get_data_from_api(search_term):
         print()
 
 
-def prepare_data_for_db(movie_title):
+def prepare_data_for_db(movie_title:str):
     """Prepare data for DB."""
     #search_term = input("Enter search term: ")
     response = get_data_from_api(movie_title)
