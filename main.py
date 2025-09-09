@@ -20,8 +20,19 @@ def print_menu():
         print()
         print("********** My Movies Database **********")
         print()
-        print(
-            "Menu \n 0. Exit \n 1. List Movies \n 2. Add movie \n 3. Delete movie \n 5. Stats \n 6. Random movie \n 7. Search movie \n 8. Sort movies by rating or year \n 9. Save a histogram of the ratings to png-file \n 10. Filter Movies for year and rating\n 11. Create html")
+        print("""Menu:
+            0. Exit
+            1. List Movies
+            2. Add movie
+            3. Delete movie
+            4. Update movie
+            5. Stats
+            6. Random movie
+            7. Search movie
+            8. Sort movies by rating or year
+            9. Save a histogram of the ratings to png-file
+            10. Filter Movies for year and rating
+            11. Create html""")
         print()
         user_input = input("Enter choice (0-11): ")
         try:

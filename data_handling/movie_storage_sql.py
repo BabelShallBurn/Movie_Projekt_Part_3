@@ -1,8 +1,11 @@
+import os
 import requests
+from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 
 # API key and API url
-API_key = "c46d7627"
+load_dotenv()
+API_key = os.getenv("API_KEY")
 API_URL = "http://www.omdbapi.com"
 
 # Define the database URL
